@@ -19,7 +19,7 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            font-family: 'Geist', 'Geist Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
             color: #1a1a1a;
             background: #ffffff;
             line-height: 1.6;
@@ -41,6 +41,7 @@
             height: 100%;
             z-index: 1;
             cursor: none;
+            display: block;
         }
         
         .container {
@@ -654,24 +655,41 @@
                         <p>Real-time insights</p>
                     </div>
                 </div>
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/stress.jpg" alt="Stress and recovery">
+                    <div class="gallery-overlay">
+                        <p>Stress and recovery dynamics</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/workflows.jpg" alt="Workflow integration">
+                    <div class="gallery-overlay">
+                        <p>Integrate with existing workflows</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/sensing.jpg" alt="Biological sensing">
+                    <div class="gallery-overlay">
+                        <p>Non-invasive real time sensing</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-
-    <div class="footer-divider"></div>
+    <div class="divider"></div>
 
     <footer>
         <div class="footer-content">
             <p class="footer-text">Molecularly imprinted polymer biosensors for wearable biomarker detection</p>
             <div class="footer-contact">
-                <a href="tel:+393333333333" class="contact-btn" title="Call us">
+                <a href="tel:+393425674509" class="contact-btn" title="Call us">
                     <span class="contact-label">Phone</span>
-                    <span class="contact-value">+39 333 3333 333</span>
+                    <span class="contact-value">+39 342 567 4509</span>
                 </a>
-                <a href="mailto:hello@bekalo.com" class="contact-btn" title="Email us">
+                <a href="mailto:keclo.it@gmail.com" class="contact-btn" title="Email us">
                     <span class="contact-label">Email</span>
-                    <span class="contact-value">hello@bekalo.com</span>
+                    <span class="contact-value">keclo.it@gmail.com</span>
                 </a>
             </div>
         </div>
@@ -680,7 +698,7 @@
 
 <div class="custom-cursor" id="customCursor"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // TouchTexture class
 class TouchTexture {
@@ -1099,12 +1117,25 @@ class App {
 
 const app = new App();
 
+// Ensure canvas is visible and rendering
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
-    app.render();
+    setTimeout(() => {
+      const canvas = document.getElementById("webGLApp");
+      if (canvas) {
+        canvas.style.display = "block";
+        app.render();
+      }
+    }, 100);
   });
 } else {
-  setTimeout(() => app.render(), 0);
+  setTimeout(() => {
+    const canvas = document.getElementById("webGLApp");
+    if (canvas) {
+      canvas.style.display = "block";
+      app.render();
+    }
+  }, 100);
 }
 
 // Custom cursor
@@ -1155,16 +1186,4 @@ const contactBtns = document.querySelectorAll(".contact-btn");
 contactBtns.forEach((btn) => {
   btn.addEventListener("mouseenter", () => {
     cursor.style.width = "50px";
-    cursor.style.height = "50px";
-    cursor.style.borderWidth = "3px";
-  });
-  btn.addEventListener("mouseleave", () => {
-    cursor.style.width = "40px";
-    cursor.style.height = "40px";
-    cursor.style.borderWidth = "2px";
-  });
-});
-</script>
-
-</body>
-</html>
+    cursor.style.height = "5
