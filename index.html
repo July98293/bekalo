@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIP Cortisol Biosensor | Real-Time Stress Monitoring</title>
+    <title>Bekalo | Real-Time Cortisol Monitoring</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,6 +23,7 @@
             color: #1a1a1a;
             background: #ffffff;
             line-height: 1.6;
+            cursor: auto;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -39,6 +40,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            cursor: none;
         }
         
         .container {
@@ -109,140 +111,13 @@
             position: relative;
             z-index: 5;
             background: white;
+            cursor: auto;
         }
 
         @media (prefers-color-scheme: dark) {
             main {
                 background: #0d0d0d;
             }
-        }
-        
-        .color-controls {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            z-index: 100;
-            display: flex;
-            gap: 0.75rem;
-            pointer-events: auto;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .color-btn {
-            min-width: 48px;
-            height: 48px;
-            padding: 0.75rem 1.25rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
-            color: white;
-            font-family: 'Syne', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-        }
-
-        .color-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .color-btn.active {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-
-
-        .color-value-display {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            padding: 0.5rem 0.75rem;
-            color: white;
-            font-family: 'Space Grotesk', monospace;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            cursor: text;
-            user-select: all;
-            transition: all 0.3s ease;
-        }
-
-        .color-value-display:hover {
-            background: rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .color-value-display:focus {
-            outline: none;
-            background: rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .copy-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            padding: 0.5rem 0.75rem;
-            color: white;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .copy-btn.copied {
-            background: rgba(76, 175, 80, 0.3);
-            border-color: rgba(76, 175, 80, 0.5);
-        }
-
-        .color-adjuster-actions {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .export-btn {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            padding: 0.75rem;
-            color: white;
-            font-family: 'Syne', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .export-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
         }
 
         .divider {
@@ -340,6 +215,7 @@
             font-size: 0.9rem;
             font-weight: 300;
             transition: all 0.3s ease;
+            overflow: hidden;
         }
 
         .partner-slot:hover {
@@ -523,11 +399,21 @@
                 color: #0d0d0d;
             }
         }
+
+        .footer-divider {
+            height: 1px;
+            background: rgba(0, 0, 0, 0.06);
+            margin: 3rem 0 0 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .footer-divider {
+                background: rgba(255, 255, 255, 0.08);
+            }
+        }
         
         footer {
             padding: 3rem 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            margin-top: 4rem;
             text-align: center;
             color: #999;
             font-size: 0.9rem;
@@ -535,7 +421,6 @@
 
         @media (prefers-color-scheme: dark) {
             footer {
-                border-top-color: rgba(255, 255, 255, 0.08);
                 color: #666;
             }
         }
@@ -569,6 +454,7 @@
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .contact-btn:hover {
@@ -615,22 +501,6 @@
             }
         }
 
-        .footer a {
-            color: #999;
-            text-decoration: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .footer a:hover {
-            opacity: 0.7;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .footer a {
-                color: #666;
-            }
-        }
-
         .custom-cursor {
             position: fixed;
             width: 40px;
@@ -658,10 +528,6 @@
             border-radius: 50%;
         }
 
-        body {
-            cursor: none;
-        }
-
         @media (max-width: 768px) {
             h1 {
                 font-size: clamp(1.8rem, 6vw, 3rem);
@@ -669,18 +535,6 @@
 
             .subtitle {
                 font-size: 0.95rem;
-            }
-
-            .color-controls {
-                top: auto;
-                bottom: 6rem;
-                right: 1rem;
-                left: 1rem;
-                justify-content: center;
-            }
-
-            .toggle-adjuster-btn {
-                display: none;
             }
 
             .features {
@@ -709,10 +563,18 @@
         <div class="container">
             <h2>Partners and supporters</h2>
             <div class="partner-grid">
-                <img src="https://github.com/July98293/bekalo/blob/main/1.jpeg" alt="Sports monitoring">
-                <img src="https://github.com/July98293/bekalo/blob/main/2.jpeg" alt="Sports monitoring">
-                <img src="https://github.com/July98293/bekalo/blob/main/3.jpeg" alt="Sports monitoring">
-                <img src="https://github.com/July98293/bekalo/blob/main/4.jpeg" alt="Sports monitoring">
+                <div class="partner-slot">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/1.jpeg" alt="Partner 1" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
+                </div>
+                <div class="partner-slot">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/2.jpeg" alt="Partner 2" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
+                </div>
+                <div class="partner-slot">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/3.jpeg" alt="Partner 3" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
+                </div>
+                <div class="partner-slot">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/4.jpeg" alt="Partner 4" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
+                </div>
             </div>
         </div>
     </section>
@@ -769,25 +631,25 @@
                     </div>
                 </div>
                 <div class="gallery-item">
-                    <img src="https://github.com/July98293/bekalo/blob/main/abc.jpg" alt="Sports monitoring">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/abc.jpg" alt="Sports monitoring">
                     <div class="gallery-overlay">
                         <p>Performance data</p>
                     </div>
                 </div>
                 <div class="gallery-item">
-                    <img src="https://github.com/July98293/bekalo/blob/main/def.jpg" alt="Elite athlete">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/def.jpg" alt="Elite athlete">
                     <div class="gallery-overlay">
                         <p>Field testing</p>
                     </div>
                 </div>
                 <div class="gallery-item">
-                    <img src="https://github.com/July98293/bekalo/blob/main/abc.ghi" alt="Performance testing">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/ghi.jpg" alt="Performance testing">
                     <div class="gallery-overlay">
                         <p>Real-time insights</p>
                     </div>
                 </div>
                 <div class="gallery-item">
-                    <img src="https://github.com/July98293/bekalo/blob/main/abc.jkl" alt="Performance testing">
+                    <img src="https://raw.githubusercontent.com/July98293/bekalo/main/jkl.jpg" alt="Performance testing">
                     <div class="gallery-overlay">
                         <p>Real-time insights</p>
                     </div>
@@ -797,7 +659,9 @@
     </section>
 
 
-    <footer class="footer">
+    <div class="footer-divider"></div>
+
+    <footer>
         <div class="footer-content">
             <p class="footer-text">Molecularly imprinted polymer biosensors for wearable biomarker detection</p>
             <div class="footer-contact">
@@ -1148,28 +1012,6 @@ class App {
       1: {
         color1: new THREE.Vector3(0.945, 0.353, 0.133),
         color2: new THREE.Vector3(0.039, 0.055, 0.153)
-      },
-      2: {
-        color1: new THREE.Vector3(1.0, 0.424, 0.314),
-        color2: new THREE.Vector3(0.251, 0.878, 0.816)
-      },
-      3: {
-        color1: new THREE.Vector3(0.945, 0.353, 0.133),
-        color2: new THREE.Vector3(0.039, 0.055, 0.153),
-        color3: new THREE.Vector3(0.251, 0.878, 0.816)
-      },
-      4: {
-        color1: new THREE.Vector3(0.949, 0.4, 0.2),
-        color2: new THREE.Vector3(0.176, 0.42, 0.427),
-        color3: new THREE.Vector3(0.82, 0.686, 0.612)
-      },
-      5: {
-        color1: new THREE.Vector3(0.945, 0.353, 0.133),
-        color2: new THREE.Vector3(0.0, 0.259, 0.22),
-        color3: new THREE.Vector3(0.945, 0.353, 0.133),
-        color4: new THREE.Vector3(0.0, 0.0, 0.0),
-        color5: new THREE.Vector3(0.945, 0.353, 0.133),
-        color6: new THREE.Vector3(0.0, 0.0, 0.0)
       }
     };
     this.currentScheme = 1;
@@ -1197,47 +1039,6 @@ class App {
       uniforms.uColor4.value.copy(colors.color2);
       uniforms.uColor5.value.copy(colors.color1);
       uniforms.uColor6.value.copy(colors.color2);
-    } else if (scheme === 2) {
-      this.scene.background = new THREE.Color(0x0a0e27);
-      uniforms.uDarkNavy.value.set(0.039, 0.055, 0.153);
-      uniforms.uGradientSize.value = 1.0;
-      uniforms.uGradientCount.value = 6.0;
-      uniforms.uSpeed.value = 1.2;
-      uniforms.uColor1Weight.value = 1.0;
-      uniforms.uColor2Weight.value = 1.0;
-      uniforms.uColor1.value.copy(colors.color1);
-      uniforms.uColor2.value.copy(colors.color2);
-      uniforms.uColor3.value.copy(colors.color1);
-      uniforms.uColor4.value.copy(colors.color2);
-      uniforms.uColor5.value.copy(colors.color1);
-      uniforms.uColor6.value.copy(colors.color2);
-    } else if (scheme === 3) {
-      this.scene.background = new THREE.Color(0x0a0e27);
-      uniforms.uDarkNavy.value.set(0.039, 0.055, 0.153);
-      uniforms.uColor1.value.copy(colors.color1);
-      uniforms.uColor2.value.copy(colors.color2);
-      uniforms.uColor3.value.copy(colors.color3);
-      uniforms.uColor4.value.copy(colors.color1);
-      uniforms.uColor5.value.copy(colors.color2);
-      uniforms.uColor6.value.copy(colors.color3);
-    } else if (scheme === 4) {
-      this.scene.background = new THREE.Color(0xffffff);
-      uniforms.uDarkNavy.value.set(0, 0, 0);
-      uniforms.uColor1.value.copy(colors.color1);
-      uniforms.uColor2.value.copy(colors.color2);
-      uniforms.uColor3.value.copy(colors.color3);
-      uniforms.uColor4.value.copy(colors.color1);
-      uniforms.uColor5.value.copy(colors.color2);
-      uniforms.uColor6.value.copy(colors.color3);
-    } else if (scheme === 5) {
-      this.scene.background = new THREE.Color(0x0a0e27);
-      uniforms.uDarkNavy.value.set(0.039, 0.055, 0.153);
-      uniforms.uColor1.value.copy(colors.color1);
-      uniforms.uColor2.value.copy(colors.color2);
-      uniforms.uColor3.value.copy(colors.color3);
-      uniforms.uColor4.value.copy(colors.color4);
-      uniforms.uColor5.value.copy(colors.color5);
-      uniforms.uColor6.value.copy(colors.color6);
     }
   }
 
@@ -1306,134 +1107,6 @@ if (document.readyState === "loading") {
   setTimeout(() => app.render(), 0);
 }
 
-// Color scheme buttons
-const colorButtons = document.querySelectorAll(".color-btn");
-colorButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const scheme = parseInt(btn.dataset.scheme);
-    app.setColorScheme(scheme);
-    colorButtons.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-    updateColorPickersFromScheme();
-  });
-});
-
-// Color Adjuster Panel Functions
-const colorAdjusterPanel = document.getElementById("colorAdjusterPanel");
-const toggleAdjusterBtn = document.getElementById("toggleAdjusterBtn");
-const closeAdjusterBtn = document.getElementById("closeAdjusterBtn");
-
-toggleAdjusterBtn.addEventListener("click", () => {
-  colorAdjusterPanel.classList.toggle("open");
-  if (colorAdjusterPanel.classList.contains("open")) {
-    updateColorPickersFromScheme();
-    toggleAdjusterBtn.style.display = "none";
-  } else {
-    toggleAdjusterBtn.style.display = "block";
-  }
-});
-
-closeAdjusterBtn.addEventListener("click", () => {
-  colorAdjusterPanel.classList.remove("open");
-  toggleAdjusterBtn.style.display = "block";
-});
-
-function rgbToHex(r, g, b) {
-  const toHex = (n) => {
-    const hex = Math.round(n * 255).toString(16);
-    return hex.length === 1 ? "0" + hex : hex;
-  };
-  return "#" + toHex(r) + toHex(g) + toHex(b);
-}
-
-function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16) / 255,
-    g: parseInt(result[2], 16) / 255,
-    b: parseInt(result[3], 16) / 255
-  } : null;
-}
-
-function updateColorPickersFromScheme() {
-  const uniforms = app.gradientBackground.uniforms;
-  const colors = [
-    uniforms.uColor1.value,
-    uniforms.uColor2.value,
-    uniforms.uColor3.value,
-    uniforms.uColor4.value,
-    uniforms.uColor5.value,
-    uniforms.uColor6.value
-  ];
-
-  colors.forEach((color, index) => {
-    const picker = document.getElementById(`colorPicker${index + 1}`);
-    const display = document.getElementById(`colorValue${index + 1}`);
-    const hex = rgbToHex(color.x, color.y, color.z);
-    picker.value = hex;
-    display.value = hex.toUpperCase();
-  });
-}
-
-for (let i = 1; i <= 6; i++) {
-  const picker = document.getElementById(`colorPicker${i}`);
-  const display = document.getElementById(`colorValue${i}`);
-
-  picker.addEventListener("input", (e) => {
-    const hex = e.target.value;
-    const rgb = hexToRgb(hex);
-
-    if (rgb) {
-      const uniforms = app.gradientBackground.uniforms;
-      const colorUniform = uniforms[`uColor${i}`];
-
-      if (colorUniform) {
-        colorUniform.value.set(rgb.r, rgb.g, rgb.b);
-        display.value = hex.toUpperCase();
-      }
-    }
-  });
-}
-
-document.querySelectorAll(".copy-btn").forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    const colorIndex = e.target.dataset.copy;
-    const display = document.getElementById(`colorValue${colorIndex}`);
-    const text = display.value;
-
-    navigator.clipboard.writeText(text).then(() => {
-      e.target.textContent = "Copied!";
-      e.target.classList.add("copied");
-      setTimeout(() => {
-        e.target.textContent = "Copy";
-        e.target.classList.remove("copied");
-      }, 2000);
-    });
-  });
-});
-
-const exportAllBtn = document.getElementById("exportAllBtn");
-exportAllBtn.addEventListener("click", () => {
-  const colors = [];
-  for (let i = 1; i <= 6; i++) {
-    const display = document.getElementById(`colorValue${i}`);
-    colors.push(display.value);
-  }
-
-  const exportText = `Color Scheme:\n${colors.map((c, i) => `Color ${i + 1}: ${c}`).join("\n")}\n\nHex Array: [${colors.map((c) => `"${c}"`).join(", ")}]`;
-
-  navigator.clipboard.writeText(exportText).then(() => {
-    exportAllBtn.textContent = "Copied!";
-    exportAllBtn.style.background = "rgba(76, 175, 80, 0.3)";
-    exportAllBtn.style.borderColor = "rgba(76, 175, 80, 0.5)";
-    setTimeout(() => {
-      exportAllBtn.textContent = "Export All Colors";
-      exportAllBtn.style.background = "";
-      exportAllBtn.style.borderColor = "";
-    }, 2000);
-  });
-});
-
 // Custom cursor
 const cursor = document.getElementById("customCursor");
 let mouseX = 0;
@@ -1463,32 +1136,7 @@ document.addEventListener("mousemove", () => {
   }
 }, { once: false });
 
-const footerLink = document.querySelector(".footer a");
 const ctaButtons = document.querySelectorAll(".button-group button");
-
-footerLink.addEventListener("mouseenter", () => {
-  cursor.style.width = "50px";
-  cursor.style.height = "50px";
-  cursor.style.borderWidth = "3px";
-});
-footerLink.addEventListener("mouseleave", () => {
-  cursor.style.width = "40px";
-  cursor.style.height = "40px";
-  cursor.style.borderWidth = "2px";
-});
-
-colorButtons.forEach((btn) => {
-  btn.addEventListener("mouseenter", () => {
-    cursor.style.width = "50px";
-    cursor.style.height = "50px";
-    cursor.style.borderWidth = "3px";
-  });
-  btn.addEventListener("mouseleave", () => {
-    cursor.style.width = "40px";
-    cursor.style.height = "40px";
-    cursor.style.borderWidth = "2px";
-  });
-});
 
 ctaButtons.forEach((btn) => {
   btn.addEventListener("mouseenter", () => {
@@ -1503,15 +1151,18 @@ ctaButtons.forEach((btn) => {
   });
 });
 
-toggleAdjusterBtn.addEventListener("mouseenter", () => {
-  cursor.style.width = "50px";
-  cursor.style.height = "50px";
-  cursor.style.borderWidth = "3px";
-});
-toggleAdjusterBtn.addEventListener("mouseleave", () => {
-  cursor.style.width = "40px";
-  cursor.style.height = "40px";
-  cursor.style.borderWidth = "2px";
+const contactBtns = document.querySelectorAll(".contact-btn");
+contactBtns.forEach((btn) => {
+  btn.addEventListener("mouseenter", () => {
+    cursor.style.width = "50px";
+    cursor.style.height = "50px";
+    cursor.style.borderWidth = "3px";
+  });
+  btn.addEventListener("mouseleave", () => {
+    cursor.style.width = "40px";
+    cursor.style.height = "40px";
+    cursor.style.borderWidth = "2px";
+  });
 });
 </script>
 
