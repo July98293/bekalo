@@ -47,7 +47,22 @@
         
         .metrics-animation { width: 280px; height: 280px; border-radius: 12px; background: transparent; overflow: hidden; flex-shrink: 0; }
         
-        @media (max-width: 1000px) { .metrics-layout { grid-template-columns: 1fr; gap: 2rem; } .metrics-numbers { flex-direction: column; gap: 1.5rem; justify-content: flex-start; } .metrics-animation { width: 100%; max-width: 280px; margin: 0 auto; } }
+        @media (max-width: 1000px) .metrics-layout {
+  display: grid;
+  grid-template-columns: 280px max-content;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.metrics-numbers {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: flex-start;
+  flex: unset;
+} .metrics-animation { width: 100%; max-width: 280px; margin: 0 auto; } }
         
         .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; padding: 4rem 0; }
         .feature { padding: 2rem; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; background: rgba(0,0,0,0.01); }
@@ -94,6 +109,7 @@
         
         .custom-cursor { position: fixed; width: 40px; height: 40px; border: 2px solid white; border-radius: 50%; pointer-events: none; z-index: 1000; transform: translate(-50%, -50%); transition: width 0.2s ease, height 0.2s ease, border-width 0.2s ease; background: transparent; will-change: transform; box-shadow: 0 0 0 1px rgba(255,255,255,0.5); }
         .custom-cursor::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: white; border-radius: 50%; }
+      
     </style>
 </head>
 <body>
@@ -123,6 +139,7 @@
 
     <section class="metrics-section">
         <div class="container">
+            <h2>MIP - molecular imprinted polymers</h2>
             <p class="metrics-intro">Laboratory accuracy meets field-ready simplicity. Bekalo is the first wearable cortisol sensor built for elite athletes who refuse to guess.</p>
             <div class="metrics-layout">
                 <div class="metrics-animation" id="matrixCanvas"></div>
@@ -166,12 +183,12 @@
             <h2>Real-world application</h2>
             <p class="gallery-subtitle">See Bekalo biosensors in elite sports environments</p>
             <div class="gallery-grid">
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=400&fit=crop" alt="Athlete training"><div class="gallery-overlay"><p>Training monitoring</p></div></div>
+                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/mno.jpg" alt="Athlete training"><div class="gallery-overlay"><p>Training monitoring</p></div></div>
                 <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/abc.jpg" alt="Sports monitoring"><div class="gallery-overlay"><p>Performance data</p></div></div>
                 <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/def.jpg" alt="Elite athlete"><div class="gallery-overlay"><p>Field testing</p></div></div>
                 <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/ghi.jpg" alt="Performance testing"><div class="gallery-overlay"><p>Stress and recovery dynamics</p></div></div>
                 <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/jkl.jpg" alt="Performance testing"><div class="gallery-overlay"><p>Designed to integrate with existing workflows</p></div></div>
-                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/mno.jpg" alt="Biological sensing"><div class="gallery-overlay"><p>Non-invasive real time biological sensing</p></div></div>
+                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/pqr.jpg" alt="Biological sensing"><div class="gallery-overlay"><p>Non-invasive real time biological sensing</p></div></div>
             </div>
         </div>
     </section>
