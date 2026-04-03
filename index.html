@@ -4,271 +4,1177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bekalo | Real-Time Cortisol Monitoring</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Geist';
-            src: url('https://cdn.jsdelivr.net/npm/geist@1.3.1/fonts/geist-sans/Geist-Regular.woff2') format('woff2');
-            font-weight: 400;
-        }
-        @font-face {
-            font-family: 'Geist';
-            src: url('https://cdn.jsdelivr.net/npm/geist@1.3.1/fonts/geist-sans/Geist-Bold.woff2') format('woff2');
-            font-weight: 700;
-        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Geist', -apple-system, sans-serif; color: #1a1a1a; background: #ffffff; line-height: 1.6; }
-        @media (prefers-color-scheme: dark) { body { background: #0d0d0d; color: #f5f5f5; } }
-        #webGLApp { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; cursor: none; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-        header { position: fixed; top: 0; left: 0; right: 0; padding: 2rem; z-index: 20; background: transparent; }
-        .logo { font-size: 0.9rem; font-weight: 500; letter-spacing: 1px; color: white; text-transform: uppercase; font-family: 'Geist'; }
-        .hero { position: relative; padding: 8rem 0 6rem; text-align: center; z-index: 10; pointer-events: none; }
-        h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1px; color: white; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
-        .subtitle { font-size: clamp(0.95rem, 2vw, 1.15rem); color: rgba(255,255,255,0.85); max-width: 700px; margin: 0 auto 1rem; line-height: 1.6; font-weight: 300; text-shadow: 0 1px 10px rgba(0,0,0,0.3); }
-        .tagline { font-size: 0.85rem; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; font-weight: 400; text-shadow: 0 1px 10px rgba(0,0,0,0.3); }
-        main { position: relative; z-index: 5; background: white; cursor: auto; }
-        @media (prefers-color-scheme: dark) { main { background: #0d0d0d; } }
-        .divider { height: 1px; background: rgba(0,0,0,0.06); margin: 3rem 0; }
-        @media (prefers-color-scheme: dark) { .divider { background: rgba(255,255,255,0.08); } }
-        
-        .metrics-section { padding: 5rem 0; background: linear-gradient(135deg, rgba(245,100,50,0.1), rgba(10,14,39,0.1)); }
-        @media (prefers-color-scheme: dark) { .metrics-section { background: linear-gradient(135deg, rgba(245,100,50,0.15), rgba(10,14,39,0.2)); } }
-        
-        .metrics-intro { font-size: 0.95rem; color: #666; margin-bottom: 3rem; line-height: 1.8; max-width: 100%; }
-        @media (prefers-color-scheme: dark) { .metrics-intro { color: #aaa; } }
-        
-        .metrics-layout { display: grid; grid-template-columns: 280px 1fr; gap: 4rem; align-items: center; margin-top: 2rem; }
-        .metrics-numbers { display: flex; flex-direction: row; gap: 3rem; justify-content: flex-end; flex: 1; }
-        .metric-card { display: flex; flex-direction: column; gap: 0.25rem; align-items: flex-start; }
-        .metric-value { font-size: 2.5rem; font-weight: 700; color: #F15A24; font-family: 'Geist', monospace; line-height: 1; }
-        .metric-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: #999; font-weight: 500; line-height: 1.3; }
-        @media (prefers-color-scheme: dark) { .metric-label { color: #666; } }
-        
-        .metrics-animation { width: 280px; height: 280px; border-radius: 12px; background: transparent; overflow: hidden; flex-shrink: 0; }
-        
-        @media (max-width: 1000px) .metrics-layout {
-  display: grid;
-  grid-template-columns: 280px max-content;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2rem;
-}
 
-.metrics-numbers {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  justify-content: flex-start;
-  flex: unset;
-} .metrics-animation { width: 100%; max-width: 280px; margin: 0 auto; } }
-        
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; padding: 4rem 0; }
-        .feature { padding: 2rem; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; background: rgba(0,0,0,0.01); }
-        @media (prefers-color-scheme: dark) { .feature { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); } }
-        .feature:hover { border-color: rgba(0,0,0,0.12); background: rgba(0,0,0,0.02); }
-        @media (prefers-color-scheme: dark) { .feature:hover { border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); } }
-        .feature-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.75rem; }
-        .feature-description { font-size: 0.95rem; color: #555; line-height: 1.7; }
-        @media (prefers-color-scheme: dark) { .feature-description { color: #bbb; } }
-        
-        .partners { padding: 4rem 0; text-align: center; }
-        .partners h2 { font-size: 1.3rem; font-weight: 400; margin-bottom: 2.5rem; letter-spacing: -0.5px; }
-        .partner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 2rem; }
-        .partner-slot { height: 90px; display: flex; align-items: center; justify-content: center; color: #999; font-size: 0.9rem; font-weight: 300; overflow: hidden; }
-        .partner-slot:hover { opacity: 0.8; }
-        
-        .gallery { padding: 4rem 0; text-align: center; }
-        .gallery h2 { font-size: 1.3rem; font-weight: 400; margin-bottom: 0.75rem; }
-        .gallery-subtitle { font-size: 1rem; color: #666; margin-bottom: 3rem; line-height: 1.6; font-weight: 300; }
-        @media (prefers-color-scheme: dark) { .gallery-subtitle { color: #aaa; } }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
-        .gallery-item { position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 4/3; background: rgba(0,0,0,0.05); cursor: pointer; }
-        @media (prefers-color-scheme: dark) { .gallery-item { background: rgba(255,255,255,0.05); } }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-        .gallery-item:hover img { transform: scale(1.08); }
-        .gallery-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4), transparent); padding: 2rem 1.5rem 1.5rem; transform: translateY(20px); opacity: 0; transition: all 0.4s ease; }
-        .gallery-item:hover .gallery-overlay { opacity: 1; transform: translateY(0); }
-        .gallery-overlay p { color: white; font-size: 1rem; font-weight: 500; letter-spacing: 0.5px; margin: 0; }
-        
-        .footer-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 3rem 0 0 0; }
-        @media (prefers-color-scheme: dark) { .footer-divider { background: rgba(255,255,255,0.08); } }
-        footer { padding: 3rem 0; text-align: center; color: #999; font-size: 0.9rem; }
-        @media (prefers-color-scheme: dark) { footer { color: #666; } }
-        .footer-content { display: flex; flex-direction: column; gap: 2rem; align-items: center; }
-        .footer-text { margin: 0; }
-        .footer-contact { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
-        .contact-btn { display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem 1.5rem; border: 1px solid rgba(0,0,0,0.12); border-radius: 12px; background: linear-gradient(135deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01)); text-decoration: none; color: inherit; transition: all 0.3s ease; cursor: pointer; }
-        .contact-btn:hover { border-color: rgba(0,0,0,0.2); background: linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02)); transform: translateY(-2px); }
-        @media (prefers-color-scheme: dark) { .contact-btn { border-color: rgba(255,255,255,0.12); background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); } .contact-btn:hover { border-color: rgba(255,255,255,0.2); background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); } }
-        .contact-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #666; }
-        @media (prefers-color-scheme: dark) { .contact-label { color: #999; } }
-        .contact-value { font-size: 0.95rem; font-weight: 500; color: #1a1a1a; }
-        @media (prefers-color-scheme: dark) { .contact-value { color: #f5f5f5; } }
-        
-        .custom-cursor { position: fixed; width: 40px; height: 40px; border: 2px solid white; border-radius: 50%; pointer-events: none; z-index: 1000; transform: translate(-50%, -50%); transition: width 0.2s ease, height 0.2s ease, border-width 0.2s ease; background: transparent; will-change: transform; box-shadow: 0 0 0 1px rgba(255,255,255,0.5); }
-        .custom-cursor::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: white; border-radius: 50%; }
-      
+        body { 
+            font-family: 'Space Grotesk', -apple-system, sans-serif; 
+            color: #1a1a1a; 
+            background: #ffffff; 
+            line-height: 1.6; 
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #0d0d0d;
+                color: #f5f5f5;
+            }
+        }
+
+        #webGLApp {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            z-index: 20;
+            background: transparent;
+        }
+
+        .logo {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            color: white;
+            text-transform: uppercase;
+            font-family: 'Space Grotesk';
+        }
+
+        .hero {
+            position: relative;
+            padding: 8rem 0 6rem;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            color: white;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            color: rgba(255,255,255,0.85);
+            max-width: 700px;
+            margin: 0 auto 1rem;
+            line-height: 1.6;
+            font-weight: 400;
+            text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+        }
+
+        main {
+            position: relative;
+            z-index: 5;
+            background: white;
+            cursor: auto;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            main {
+                background: #0d0d0d;
+            }
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(0,0,0,0.06);
+            margin: 3rem 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .divider {
+                background: rgba(255,255,255,0.08);
+            }
+        }
+
+        .partners { 
+            padding: 8rem; 
+            position: relative;
+            z-index: 8;
+        }
+
+        .partners h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.5px;
+            position: center;
+        }
+
+        .partner-grid {
+            padding: 5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 2rem;
+        }
+
+        .partner-slot { 
+            height: 90px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #999; 
+            font-size: 0.9rem; 
+            font-weight: 300; 
+            overflow: hidden;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .partner-slot:hover { 
+            transform: translateY(-4px);
+            filter: drop-shadow(0 10px 20px rgba(241, 90, 36, 0.2));
+        }
+
+        .metrics-section { 
+            padding: 6rem 0; 
+            background: linear-gradient(135deg, rgba(245,100,50,0.1), rgba(10,14,39,0.1)); 
+            position: relative;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .metrics-section {
+                background: linear-gradient(135deg, rgba(245,100,50,0.15), rgba(10,14,39,0.2));
+            }
+        }
+
+        .metrics-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #F15A24, #0a0e27);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .metrics-intro { 
+            font-size: 0.95rem; 
+            color: #666; 
+            margin-bottom: 3rem; 
+            line-height: 1.8; 
+            max-width: 100%; 
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .metrics-intro {
+                color: #aaa;
+            }
+        }
+
+        .metrics-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .metrics-animation { 
+            width: 300px; 
+            height: 300px; 
+            border-radius: 12px; 
+            background: transparent; 
+            overflow: hidden; 
+            flex-shrink: 0;
+        }
+
+        .metrics-numbers { 
+            display: flex; 
+            flex-direction: row; 
+            gap: 3rem; 
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .metric-card { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.5rem; 
+            align-items: center;
+            text-align: center;
+        }
+
+        .metric-value { 
+            font-size: 2.8rem; 
+            font-weight: 700; 
+            color: #F15A24; 
+            font-family: 'Inter', monospace; 
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .metric-label { 
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: #999; 
+            font-weight: 600; 
+            line-height: 1.4;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .metric-label {
+                color: #666;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .metrics-wrapper {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .metrics-animation {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .metrics-numbers {
+                gap: 2rem;
+            }
+        }
+
+        .features { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2.5rem; 
+            padding: 4rem 0; 
+        }
+
+        .feature { 
+            padding: 2rem; 
+            border: 1px solid rgba(0,0,0,0.06); 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.01);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (prefers-color-scheme: dark) { 
+            .feature {
+                border-color: rgba(255,255,255,0.08); 
+                background: rgba(255,255,255,0.02); 
+            } 
+        }
+
+        .feature::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(241, 90, 36, 0.15), rgba(241, 90, 36, 0.08));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .feature:hover {
+            border-color: #F15A24;
+            background: #F15A24;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(241, 90, 36, 0.3);
+        }
+
+        .feature:hover::before {
+            opacity: 1;
+        }
+
+        .feature-title { 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            margin-bottom: 0.75rem;
+            color: #1a1a1a;
+            transition: color 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .feature-title {
+                color: #f5f5f5;
+            }
+        }
+
+        .feature:hover .feature-title {
+            color: #ffffff;
+        }
+
+        .feature-description { 
+            font-size: 0.95rem; 
+            color: #555; 
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .feature-description {
+                color: #bbb;
+            }
+        }
+
+        .feature:hover .feature-description {
+            color: #ffffff;
+        }
+
+        .gallery {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .gallery h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .gallery-subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .gallery-subtitle {
+                color: #aaa;
+            }
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            aspect-ratio: 4/3;
+            background: rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .gallery-item {
+                background: rgba(255,255,255,0.05);
+            }
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4), transparent);
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-overlay p {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: #000;
+            margin: 3rem 0 0 0;
+        }
+
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            background: #000;
+            color: #fff;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .footer-text {
+            margin: 0;
+            color: #fff;
+        }
+
+        .footer-contact {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.25rem; 
+            padding: 1rem 1.5rem; 
+            border: 1px solid rgba(255,255,255,0.15); 
+            border-radius: 12px; 
+            background: rgba(255,255,255,0.03); 
+            text-decoration: none; 
+            color: inherit; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+        }
+
+        .contact-btn:hover { 
+            border-color: #F15A24;
+            background: rgba(241, 90, 36, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(241, 90, 36, 0.2);
+        }
+
+        .contact-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .contact-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .custom-cursor { 
+            position: fixed; 
+            width: 40px; 
+            height: 40px; 
+            border: 2px solid white; 
+            border-radius: 50%; 
+            pointer-events: none; 
+            z-index: 1000; 
+            transform: translate(-50%, -50%); 
+            transition: width 0.2s ease, height 0.2s ease, border-width 0.2s ease; 
+            background: transparent; 
+            will-change: transform; 
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.5); 
+        }
+
+        .custom-cursor::before { 
+            content: ""; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 8px; 
+            height: 8px; 
+            background: white; 
+            border-radius: 50%; 
+        }
     </style>
 </head>
 <body>
-<header><div class="logo">Bekalo</div></header>
-<section class="hero">
-    <div class="container">
-        <h1>Real-time cortisol monitoring</h1>
-        <p class="subtitle">A wearable electrochemical biosensor based on molecularly imprinted polymers. Laboratory accuracy with field-deployment simplicity.</p>
-        <p class="tagline">For elite athletes and performance monitoring</p>
-    </div>
-</section>
+    <header>
+        <div class="logo">Bekalo</div>
+    </header>
 
-<main>
-    <section class="partners">
+    <section class="hero">
         <div class="container">
-            <h2>Partners and supporters</h2>
-            <div class="partner-grid">
-                <div class="partner-slot"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/1.jpeg" alt="Partner 1" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;"></div>
-                <div class="partner-slot"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/2.jpeg" alt="Partner 2" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;"></div>
-                <div class="partner-slot"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/3.jpeg" alt="Partner 3" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;"></div>
-                <div class="partner-slot"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/4.jpeg" alt="Partner 4" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;"></div>
+            <h1>Real-time cortisol monitoring</h1>
+            <p class="subtitle">A wearable electrochemical biosensor based on molecularly imprinted polymers. Laboratory accuracy with field-deployment simplicity.</p>
+            <p class="tagline">For elite athletes and performance monitoring</p>
+        </div>
+
+        <div class="partner-grid">
+            <div class="partner-slot">
+                <img src="https://raw.githubusercontent.com/July98293/bekalo/main/1.jpeg" alt="Partner 1" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
+            </div>
+            <div class="partner-slot">
+                <img src="https://raw.githubusercontent.com/July98293/bekalo/main/2.jpeg" alt="Partner 2" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
+            </div>
+            <div class="partner-slot">
+                <img src="https://raw.githubusercontent.com/July98293/bekalo/main/3.jpeg" alt="Partner 3" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
+            </div>
+            <div class="partner-slot">
+                <img src="https://raw.githubusercontent.com/July98293/bekalo/main/4.jpeg" alt="Partner 4" style="width: 100%; height: 100%; object-fit: contain; padding: 0.5rem;">
             </div>
         </div>
     </section>
 
-    <div class="divider"></div>
+    <main>
+        <section class="metrics-section">
+            <div class="container">
+                <div style="text-align: center;">
+                    <h2 class="metrics-title">MIP — Molecular Imprinted Polymers</h2>
+                    <p class="metrics-intro">Laboratory accuracy meets field-ready simplicity. Bekalo is the first wearable cortisol sensor built for elite athletes who refuse to guess.</p>
 
-    <section class="metrics-section">
-        <div class="container">
-            <h2>MIP - molecular imprinted polymers</h2>
-            <p class="metrics-intro">Laboratory accuracy meets field-ready simplicity. Bekalo is the first wearable cortisol sensor built for elite athletes who refuse to guess.</p>
-            <div class="metrics-layout">
-                <div class="metrics-animation" id="matrixCanvas"></div>
-                <div class="metrics-numbers">
-                    <div class="metric-card">
-                        <div class="metric-value">0.01</div>
-                        <div class="metric-label">NG/ML<br>Detection<br>Limit</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">&lt;€1</div>
-                        <div class="metric-label">Per Sensor<br>Cost</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">120°C</div>
-                        <div class="metric-label">Thermal<br>Tolerance</div>
+                    <div class="metrics-wrapper">
+                        <div class="metrics-animation" id="matrixCanvas"></div>
+                        <div class="metrics-numbers">
+                            <div class="metric-card">
+                                <div class="metric-value">0.01</div>
+                                <div class="metric-label">NG/ML<br>Detection<br>Limit</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">&lt;€1</div>
+                                <div class="metric-label">Per Sensor<br>Cost</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">120°C</div>
+                                <div class="metric-label">Thermal<br>Tolerance</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div class="divider"></div>
-
-    <section class="features">
-        <div class="container" style="grid-column: 1 / -1;">
+        <div class="container" style="grid-column: 1 / -1; padding:4rem;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem;">
-                <div class="feature"><div class="feature-title">Measurement accuracy</div><p class="feature-description">LOD 0.01 ng/mL with linear range up to 100 ng/mL. Comparable to ELISA. Validated on athlete sweat samples.</p></div>
-                <div class="feature"><div class="feature-title">Thermal stability</div><p class="feature-description">Functional from 20 to 120 °C. No cold chain required. Shelf-life of 6–12 months at ambient temperature.</p></div>
-                <div class="feature"><div class="feature-title">Continuous monitoring</div><p class="feature-description">Passive sweat collection. Measurements every 5–50 minutes in field conditions without user discomfort.</p></div>
-                <div class="feature"><div class="feature-title">Cost-effective</div><p class="feature-description">Less than €1 per sensor at scale. 100× more economical than immunoassay-based alternatives.</p></div>
-                <div class="feature"><div class="feature-title">Regenerable</div><p class="feature-description">Wash with acid or base to reset binding sites. Multiple measurement cycles from a single patch.</p></div>
-                <div class="feature"><div class="feature-title">Proven technology</div><p class="feature-description">Built on peer-reviewed literature. Prototype development underway since November 2025.</p></div>
+                <div class="feature">
+                    <div class="feature-title">Measurement accuracy</div>
+                    <p class="feature-description">LOD 0.01 ng/mL with linear range up to 100 ng/mL. Comparable to ELISA. Validated on athlete sweat samples.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">Thermal stability</div>
+                    <p class="feature-description">Functional from 20 to 120 °C. No cold chain required. Shelf-life of 6–12 months at ambient temperature.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">Continuous monitoring</div>
+                    <p class="feature-description">Passive sweat collection. Measurements every 5–50 minutes in field conditions without user discomfort.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">Cost-effective</div>
+                    <p class="feature-description">Less than €1 per sensor at scale. 100× more economical than immunoassay-based alternatives.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">Regenerable</div>
+                    <p class="feature-description">Wash with acid or base to reset binding sites. Multiple measurement cycles from a single patch.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">Proven technology</div>
+                    <p class="feature-description">Built on peer-reviewed literature. Prototype development underway since November 2025.</p>
+                </div>
             </div>
         </div>
-    </section>
 
-    <div class="divider"></div>
-
-    <section class="gallery">
-        <div class="container">
-            <h2>Real-world application</h2>
-            <p class="gallery-subtitle">See Bekalo biosensors in elite sports environments</p>
-            <div class="gallery-grid">
-                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/mno.jpg" alt="Athlete training"><div class="gallery-overlay"><p>Training monitoring</p></div></div>
-                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/abc.jpg" alt="Sports monitoring"><div class="gallery-overlay"><p>Performance data</p></div></div>
-                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/def.jpg" alt="Elite athlete"><div class="gallery-overlay"><p>Field testing</p></div></div>
-                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/stu.jpg" alt="Performance testing"><div class="gallery-overlay"><p>Stress and recovery dynamics</p></div></div>
-                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/jkl.jpg" alt="Performance testing"><div class="gallery-overlay"><p>Designed to integrate with existing workflows</p></div></div>
-                <div class="gallery-item"><img src="https://raw.githubusercontent.com/July98293/bekalo/main/pqr.jpg" alt="Biological sensing"><div class="gallery-overlay"><p>Non-invasive real time biological sensing</p></div></div>
+        <section class="gallery">
+            <div class="container">
+                <h2>Real-world application</h2>
+                <p class="gallery-subtitle">See Bekalo biosensors in elite sports environments</p>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/abc.jpg" alt="Athlete training">
+                        <div class="gallery-overlay"><p>Training monitoring</p></div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/def.jpg" alt="Sports monitoring">
+                        <div class="gallery-overlay"><p>Performance data</p></div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/hgi.jpg" alt="Elite athlete">
+                        <div class="gallery-overlay"><p>Field testing</p></div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/jkl.jpg" alt="Performance testing">
+                        <div class="gallery-overlay"><p>Stress and recovery dynamics</p></div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/mno.jpg" alt="Performance testing">
+                        <div class="gallery-overlay"><p>Designed to integrate with existing workflows</p></div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/pqr.jpg" alt="Biological sensing">
+                        <div class="gallery-overlay"><p>Non-invasive real time biological sensing</p></div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/pqr.jpg" alt="Biological sensing">
+                        <div class="gallery-overlay"><p>Non-invasive real time biological sensing</p></div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/July98293/bekalo/main/pqr.jpg" alt="Biological sensing">
+                        <div class="gallery-overlay"><p>Non-invasive real time biological sensing</p></div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div class="footer-divider"></div>
+        <div class="footer-divider"></div>
 
-    <footer>
-        <div class="footer-content">
-            <h2 style="font-size: 1.8rem; font-weight: 300; margin-bottom: 2rem; letter-spacing: -0.5px;">Contact us</h2>
-            <p class="footer-text">Molecularly imprinted polymer biosensors for wearable biomarker detection</p>
-            <div class="footer-contact">
-                <a href="tel:+393425674509" class="contact-btn" title="Call us">
-                    <span class="contact-label">Phone</span>
-                    <span class="contact-value">+39 342 567 4509</span>
-                </a>
-                <a href="mailto:keclo.it@gmail.com" class="contact-btn" title="Email us">
-                    <span class="contact-label">Email</span>
-                    <span class="contact-value">keclo.it@gmail.com</span>
-                </a>
+        <footer>
+            <div class="footer-content">
+                <h2 style="font-size: 1.8rem; font-weight: 600; margin-bottom: 2rem; letter-spacing: -0.5px; color: #fff;">Contact us</h2>
+                <p class="footer-text">Molecularly imprinted polymer biosensors for wearable biomarker detection</p>
+                <div class="footer-contact">
+                    <a href="tel:+393425674509" class="contact-btn" title="Call us">
+                        <span class="contact-label">Phone</span>
+                        <span class="contact-value">+39 342 567 4509</span>
+                    </a>
+                    <a href="mailto:keclo.it@gmail.com" class="contact-btn" title="Email us">
+                        <span class="contact-label">Email</span>
+                        <span class="contact-value">keclo.it@gmail.com</span>
+                    </a>
+                </div>
             </div>
-        </div>
-    </footer>
-</main>
+        </footer>
+    </main>
 
-<div class="custom-cursor" id="customCursor"></div>
+    <div class="custom-cursor" id="customCursor"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-class TouchTexture {
-    constructor() { this.size = 64; this.width = this.height = this.size; this.maxAge = 64; this.radius = 0.25 * this.size; this.speed = 1 / this.maxAge; this.trail = []; this.last = null; this.initTexture(); }
-    initTexture() { this.canvas = document.createElement("canvas"); this.canvas.width = this.width; this.canvas.height = this.height; this.ctx = this.canvas.getContext("2d"); this.ctx.fillStyle = "black"; this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); this.texture = new THREE.Texture(this.canvas); }
-    update() { this.clear(); let speed = this.speed; for (let i = this.trail.length - 1; i >= 0; i--) { const point = this.trail[i]; let f = point.force * speed * (1 - point.age / this.maxAge); point.x += point.vx * f; point.y += point.vy * f; point.age++; if (point.age > this.maxAge) { this.trail.splice(i, 1); } else { this.drawPoint(point); } } this.texture.needsUpdate = true; }
-    clear() { this.ctx.fillStyle = "black"; this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); }
-    addTouch(point) { let force = 0, vx = 0, vy = 0; const last = this.last; if (last) { const dx = point.x - last.x, dy = point.y - last.y; if (dx === 0 && dy === 0) return; const dd = dx * dx + dy * dy, d = Math.sqrt(dd); vx = dx / d; vy = dy / d; force = Math.min(dd * 20000, 2.0); } this.last = { x: point.x, y: point.y }; this.trail.push({ x: point.x, y: point.y, age: 0, force, vx, vy }); }
-    drawPoint(point) { const pos = { x: point.x * this.width, y: (1 - point.y) * this.height }; let intensity = 1; if (point.age < this.maxAge * 0.3) { intensity = Math.sin((point.age / (this.maxAge * 0.3)) * (Math.PI / 2)); } else { const t = 1 - (point.age - this.maxAge * 0.3) / (this.maxAge * 0.7); intensity = -t * (t - 2); } intensity *= point.force; const radius = this.radius, color = `${((point.vx + 1) / 2) * 255}, ${((point.vy + 1) / 2) * 255}, ${intensity * 255}`, offset = this.size * 5; this.ctx.shadowOffsetX = offset; this.ctx.shadowOffsetY = offset; this.ctx.shadowBlur = radius * 1; this.ctx.shadowColor = `rgba(${color},${0.2 * intensity})`; this.ctx.beginPath(); this.ctx.fillStyle = "rgba(255,0,0,1)"; this.ctx.arc(pos.x - offset, pos.y - offset, radius, 0, Math.PI * 2); this.ctx.fill(); }
-}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    class TouchTexture {
+        constructor() {
+            this.size = 64;
+            this.width = this.height = this.size;
+            this.maxAge = 64;
+            this.radius = 0.25 * this.size;
+            this.speed = 1 / this.maxAge;
+            this.trail = [];
+            this.last = null;
+            this.initTexture();
+        }
 
-class GradientBackground {
-    constructor(sceneManager) { this.sceneManager = sceneManager; this.mesh = null; this.uniforms = { uTime: { value: 0 }, uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }, uColor1: { value: new THREE.Vector3(0.945, 0.353, 0.133) }, uColor2: { value: new THREE.Vector3(0.039, 0.055, 0.153) }, uSpeed: { value: 1.2 }, uIntensity: { value: 1.8 }, uTouchTexture: { value: null }, uGrainIntensity: { value: 0.08 }, uDarkNavy: { value: new THREE.Vector3(0.039, 0.055, 0.153) } }; }
-    init() { const viewSize = this.sceneManager.getViewSize(); const geometry = new THREE.PlaneGeometry(viewSize.width, viewSize.height, 1, 1); const material = new THREE.ShaderMaterial({ uniforms: this.uniforms, vertexShader: `varying vec2 vUv; void main() { vec3 pos = position.xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.); vUv = uv; }`, fragmentShader: `uniform float uTime; uniform vec2 uResolution; uniform vec3 uColor1; uniform vec3 uColor2; uniform float uSpeed; uniform float uIntensity; uniform sampler2D uTouchTexture; uniform float uGrainIntensity; uniform vec3 uDarkNavy; varying vec2 vUv; float grain(vec2 uv, float time) { vec2 grainUv = uv * uResolution * 0.5; float grainValue = fract(sin(dot(grainUv + time, vec2(12.9898, 78.233))) * 43758.5453); return grainValue * 2.0 - 1.0; } void main() { vec2 uv = vUv; vec4 touchTex = texture2D(uTouchTexture, uv); float vx = -(touchTex.r * 2.0 - 1.0); float vy = -(touchTex.g * 2.0 - 1.0); float intensity = touchTex.b; uv.x += vx * 0.8 * intensity; uv.y += vy * 0.8 * intensity; vec2 center1 = vec2(0.5 + sin(uTime * uSpeed * 0.4) * 0.4, 0.5 + cos(uTime * uSpeed * 0.5) * 0.4); vec2 center2 = vec2(0.5 + cos(uTime * uSpeed * 0.6) * 0.5, 0.5 + sin(uTime * uSpeed * 0.45) * 0.5); float dist1 = length(uv - center1); float dist2 = length(uv - center2); float influence1 = 1.0 - smoothstep(0.0, 0.5, dist1); float influence2 = 1.0 - smoothstep(0.0, 0.5, dist2); vec3 color = uColor1 * influence1 * (0.55 + 0.45 * sin(uTime * uSpeed)) + uColor2 * influence2 * (0.55 + 0.45 * cos(uTime * uSpeed * 1.2)); color = clamp(color, vec3(0.0), vec3(1.0)) * uIntensity; float luminance = dot(color, vec3(0.299, 0.587, 0.114)); color = mix(vec3(luminance), color, 1.35); color = pow(color, vec3(0.92)); float brightness1 = length(color); float mixFactor1 = max(brightness1 * 1.2, 0.15); color = mix(uDarkNavy, color, mixFactor1); float grainValue = grain(uv, uTime); color += grainValue * uGrainIntensity; color = clamp(color, vec3(0.0), vec3(1.0)); gl_FragColor = vec4(color, 1.0); }` }); this.mesh = new THREE.Mesh(geometry, material); this.mesh.position.z = 0; this.sceneManager.scene.add(this.mesh); }
-    update(delta) { if (this.uniforms.uTime) { this.uniforms.uTime.value += delta; } }
-    onResize(width, height) { const viewSize = this.sceneManager.getViewSize(); if (this.mesh) { this.mesh.geometry.dispose(); this.mesh.geometry = new THREE.PlaneGeometry(viewSize.width, viewSize.height, 1, 1); } if (this.uniforms.uResolution) { this.uniforms.uResolution.value.set(width, height); } }
-}
+        initTexture() {
+            this.canvas = document.createElement("canvas");
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+            this.ctx = this.canvas.getContext("2d");
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.texture = new THREE.Texture(this.canvas);
+        }
 
-class App {
-    constructor() { this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", alpha: false, stencil: false, depth: false }); this.renderer.setSize(window.innerWidth, window.innerHeight); this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); this.renderer.setAnimationLoop(null); document.body.appendChild(this.renderer.domElement); this.renderer.domElement.id = "webGLApp"; this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000); this.camera.position.z = 50; this.scene = new THREE.Scene(); this.scene.background = new THREE.Color(0x0a0e27); this.clock = new THREE.Clock(); this.touchTexture = new TouchTexture(); this.gradientBackground = new GradientBackground(this); this.gradientBackground.uniforms.uTouchTexture.value = this.touchTexture.texture; this.init(); }
-    init() { this.gradientBackground.init(); this.render(); this.tick(); window.addEventListener("resize", () => this.onResize()); window.addEventListener("mousemove", (ev) => this.onMouseMove(ev)); window.addEventListener("touchmove", (ev) => this.onTouchMove(ev)); }
-    onTouchMove(ev) { const touch = ev.touches[0]; this.onMouseMove({ clientX: touch.clientX, clientY: touch.clientY }); }
-    onMouseMove(ev) { this.mouse = { x: ev.clientX / window.innerWidth, y: 1 - ev.clientY / window.innerHeight }; this.touchTexture.addTouch(this.mouse); }
-    getViewSize() { const fovInRadians = (this.camera.fov * Math.PI) / 180; const height = Math.abs(this.camera.position.z * Math.tan(fovInRadians / 2) * 2); return { width: height * this.camera.aspect, height }; }
-    update(delta) { this.touchTexture.update(); this.gradientBackground.update(delta); }
-    render() { const delta = this.clock.getDelta(); const clampedDelta = Math.min(delta, 0.1); this.renderer.render(this.scene, this.camera); this.update(clampedDelta); }
-    tick() { this.render(); requestAnimationFrame(() => this.tick()); }
-    onResize() { this.camera.aspect = window.innerWidth / window.innerHeight; this.camera.updateProjectionMatrix(); this.renderer.setSize(window.innerWidth, window.innerHeight); this.gradientBackground.onResize(window.innerWidth, window.innerHeight); }
-}
+        update() {
+            this.clear();
+            let speed = this.speed;
+            for (let i = this.trail.length - 1; i >= 0; i--) {
+                const point = this.trail[i];
+                let f = point.force * speed * (1 - point.age / this.maxAge);
+                point.x += point.vx * f;
+                point.y += point.vy * f;
+                point.age++;
+                if (point.age > this.maxAge) {
+                    this.trail.splice(i, 1);
+                } else {
+                    this.drawPoint(point);
+                }
+            }
+            this.texture.needsUpdate = true;
+        }
 
-const app = new App();
+        clear() {
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
 
-class MatrixGrid {
-    constructor(containerId) { this.container = document.getElementById(containerId); this.canvas = document.createElement('canvas'); this.ctx = this.canvas.getContext('2d'); this.cols = 15; this.rows = 15; this.grid = []; this.mouse = { x: -1000, y: -1000 }; this.canvas.style.display = 'block'; this.canvas.style.width = '100%'; this.canvas.style.height = '100%'; this.container.appendChild(this.canvas); this.resize(); window.addEventListener('resize', () => this.resize()); this.container.addEventListener('mousemove', (e) => this.onMouseMove(e)); this.container.addEventListener('mouseleave', () => this.onMouseLeave()); this.container.addEventListener('click', (e) => this.onClick(e)); this.initGrid(); this.animate(); }
-    resize() { this.canvas.width = this.container.offsetWidth; this.canvas.height = this.container.offsetHeight; this.cellWidth = this.canvas.width / this.cols; this.cellHeight = this.canvas.height / this.rows; }
-    initGrid() { this.grid = []; for (let y = 0; y < this.rows; y++) { this.grid[y] = []; for (let x = 0; x < this.cols; x++) { this.grid[y][x] = { x: x, y: y, active: 0, maxActive: 0 }; } } }
-    onMouseMove(e) { const rect = this.canvas.getBoundingClientRect(); const px = e.clientX - rect.left; const py = e.clientY - rect.top; this.mouse.x = Math.floor(px / this.cellWidth); this.mouse.y = Math.floor(py / this.cellHeight); if (this.mouse.x >= 0 && this.mouse.x < this.cols && this.mouse.y >= 0 && this.mouse.y < this.rows) { this.activateCell(this.mouse.x, this.mouse.y, 50); } }
-    onMouseLeave() { this.mouse.x = -1000; this.mouse.y = -1000; }
-    onClick(e) { const rect = this.canvas.getBoundingClientRect(); const px = e.clientX - rect.left; const py = e.clientY - rect.top; const x = Math.floor(px / this.cellWidth); const y = Math.floor(py / this.cellHeight); if (x >= 0 && x < this.cols && y >= 0 && y < this.rows) { this.activateCell(x, y, 100); } }
-    activateCell(x, y, strength) { if (x >= 0 && x < this.cols && y >= 0 && y < this.rows) { this.grid[y][x].active = Math.max(this.grid[y][x].active, strength); this.grid[y][x].maxActive = strength; } }
-    propagate() { const newGrid = JSON.parse(JSON.stringify(this.grid)); for (let y = 0; y < this.rows; y++) { for (let x = 0; x < this.cols; x++) { if (this.grid[y][x].active > 0) { const neighbors = [[x-1, y], [x+1, y], [x, y-1], [x, y+1], [x-1, y-1], [x+1, y-1], [x-1, y+1], [x+1, y+1]]; neighbors.forEach(([nx, ny]) => { if (nx >= 0 && nx < this.cols && ny >= 0 && ny < this.rows) { const currentActive = this.grid[y][x].active; const propagated = currentActive * 0.7; if (propagated > newGrid[ny][nx].active) { newGrid[ny][nx].active = propagated; } } }); } } } for (let y = 0; y < this.rows; y++) { for (let x = 0; x < this.cols; x++) { this.grid[y][x].active = newGrid[y][x].active * 0.92; } } }
-    animate() { this.ctx.fillStyle = 'rgba(255, 255, 255, 0.01)'; this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); this.propagate(); for (let y = 0; y < this.rows; y++) { for (let x = 0; x < this.cols; x++) { const cell = this.grid[y][x]; const px = x * this.cellWidth + this.cellWidth / 2; const py = y * this.cellHeight + this.cellHeight / 2; const intensity = Math.pow(cell.active / 100, 0.5); const radius = 2 + intensity * 4; this.ctx.fillStyle = `rgba(241, 90, 36, ${0.3 + intensity * 0.7})`; this.ctx.beginPath(); this.ctx.arc(px, py, radius, 0, Math.PI * 2); this.ctx.fill(); if (cell.active > 10) { this.ctx.strokeStyle = `rgba(241, 90, 36, ${intensity * 0.3})`; this.ctx.lineWidth = 1; this.ctx.beginPath(); this.ctx.arc(px, py, radius + 3, 0, Math.PI * 2); this.ctx.stroke(); } } } this.ctx.strokeStyle = 'rgba(241, 90, 36, 0.2)'; this.ctx.lineWidth = 1; for (let y = 0; y < this.rows; y++) { for (let x = 0; x < this.cols; x++) { if (this.grid[y][x].active > 20) { const px = x * this.cellWidth + this.cellWidth / 2; const py = y * this.cellHeight + this.cellHeight / 2; const neighbors = [[x+1, y], [x, y+1], [x+1, y+1]]; neighbors.forEach(([nx, ny]) => { if (nx < this.cols && ny < this.rows) { const neighborActive = this.grid[ny][nx].active; if (neighborActive > 20) { const npx = nx * this.cellWidth + this.cellWidth / 2; const npy = ny * this.cellHeight + this.cellHeight / 2; const avgActive = (this.grid[y][x].active + neighborActive) / 2; this.ctx.globalAlpha = Math.min(avgActive / 100, 0.4); this.ctx.beginPath(); this.ctx.moveTo(px, py); this.ctx.lineTo(npx, npy); this.ctx.stroke(); this.ctx.globalAlpha = 1; } } }); } } } requestAnimationFrame(() => this.animate()); }
-}
+        addTouch(point) {
+            let force = 0, vx = 0, vy = 0;
+            const last = this.last;
+            if (last) {
+                const dx = point.x - last.x, dy = point.y - last.y;
+                if (dx === 0 && dy === 0) return;
+                const dd = dx * dx + dy * dy, d = Math.sqrt(dd);
+                vx = dx / d;
+                vy = dy / d;
+                force = Math.min(dd * 20000, 2.0);
+            }
+            this.last = { x: point.x, y: point.y };
+            this.trail.push({ x: point.x, y: point.y, age: 0, force, vx, vy });
+        }
 
-if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', () => { new MatrixGrid('matrixCanvas'); }); } else { new MatrixGrid('matrixCanvas'); }
+        drawPoint(point) {
+            const pos = { x: point.x * this.width, y: (1 - point.y) * this.height };
+            let intensity = 1;
+            if (point.age < this.maxAge * 0.3) {
+                intensity = Math.sin((point.age / (this.maxAge * 0.3)) * (Math.PI / 2));
+            } else {
+                const t = 1 - (point.age - this.maxAge * 0.3) / (this.maxAge * 0.7);
+                intensity = -t * (t - 2);
+            }
+            intensity *= point.force;
+            const radius = this.radius;
+            const color = `${((point.vx + 1) / 2) * 255}, ${((point.vy + 1) / 2) * 255}, ${intensity * 255}`;
+            const offset = this.size * 5;
+            this.ctx.shadowOffsetX = offset;
+            this.ctx.shadowOffsetY = offset;
+            this.ctx.shadowBlur = radius * 1;
+            this.ctx.shadowColor = `rgba(${color},${0.2 * intensity})`;
+            this.ctx.beginPath();
+            this.ctx.fillStyle = "rgba(255,0,0,1)";
+            this.ctx.arc(pos.x - offset, pos.y - offset, radius, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
 
-const cursor = document.getElementById("customCursor");
-let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
-document.addEventListener("mousemove", (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-let isCursorAnimating = false;
-function animateCursor() { if (!isCursorAnimating) return; cursorX = mouseX; cursorY = mouseY; cursor.style.left = cursorX + "px"; cursor.style.top = cursorY + "px"; requestAnimationFrame(animateCursor); }
-document.addEventListener("mousemove", () => { if (!isCursorAnimating) { isCursorAnimating = true; animateCursor(); } }, { once: false });
-const contactBtns = document.querySelectorAll(".contact-btn");
-contactBtns.forEach((btn) => { btn.addEventListener("mouseenter", () => { cursor.style.width = "50px"; cursor.style.height = "50px"; cursor.style.borderWidth = "3px"; }); btn.addEventListener("mouseleave", () => { cursor.style.width = "40px"; cursor.style.height = "40px"; cursor.style.borderWidth = "2px"; }); });
-</script>
+    class GradientBackground {
+        constructor(sceneManager) {
+            this.sceneManager = sceneManager;
+            this.mesh = null;
+            this.uniforms = {
+                uTime: { value: 0 },
+                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                uColor1: { value: new THREE.Vector3(0.945, 0.353, 0.133) },
+                uColor2: { value: new THREE.Vector3(0.039, 0.055, 0.153) },
+                uSpeed: { value: 1.2 },
+                uIntensity: { value: 1.8 },
+                uTouchTexture: { value: null },
+                uGrainIntensity: { value: 0.08 },
+                uDarkNavy: { value: new THREE.Vector3(0.039, 0.055, 0.153) }
+            };
+        }
+
+        init() {
+            const viewSize = this.sceneManager.getViewSize();
+            const geometry = new THREE.PlaneGeometry(viewSize.width, viewSize.height, 1, 1);
+            const material = new THREE.ShaderMaterial({
+                uniforms: this.uniforms,
+                vertexShader: `
+                    varying vec2 vUv;
+                    void main() {
+                        vec3 pos = position.xyz;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);
+                        vUv = uv;
+                    }
+                `,
+                fragmentShader: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    uniform vec3 uColor1;
+                    uniform vec3 uColor2;
+                    uniform float uSpeed;
+                    uniform float uIntensity;
+                    uniform sampler2D uTouchTexture;
+                    uniform float uGrainIntensity;
+                    uniform vec3 uDarkNavy;
+                    varying vec2 vUv;
+
+                    float grain(vec2 uv, float time) {
+                        vec2 grainUv = uv * uResolution * 0.5;
+                        float grainValue = fract(sin(dot(grainUv + time, vec2(12.9898, 78.233))) * 43758.5453);
+                        return grainValue * 2.0 - 1.0;
+                    }
+
+                    void main() {
+                        vec2 uv = vUv;
+                        vec4 touchTex = texture2D(uTouchTexture, uv);
+                        float vx = -(touchTex.r * 2.0 - 1.0);
+                        float vy = -(touchTex.g * 2.0 - 1.0);
+                        float intensity = touchTex.b;
+
+                        uv.x += vx * 0.8 * intensity;
+                        uv.y += vy * 0.8 * intensity;
+
+                        vec2 center1 = vec2(0.5 + sin(uTime * uSpeed * 0.4) * 0.4, 0.5 + cos(uTime * uSpeed * 0.5) * 0.4);
+                        vec2 center2 = vec2(0.5 + cos(uTime * uSpeed * 0.6) * 0.5, 0.5 + sin(uTime * uSpeed * 0.45) * 0.5);
+
+                        float dist1 = length(uv - center1);
+                        float dist2 = length(uv - center2);
+
+                        float influence1 = 1.0 - smoothstep(0.0, 0.5, dist1);
+                        float influence2 = 1.0 - smoothstep(0.0, 0.5, dist2);
+
+                        vec3 color = uColor1 * influence1 * (0.55 + 0.45 * sin(uTime * uSpeed))
+                                   + uColor2 * influence2 * (0.55 + 0.45 * cos(uTime * uSpeed * 1.2));
+
+                        color = clamp(color, vec3(0.0), vec3(1.0)) * uIntensity;
+                        float luminance = dot(color, vec3(0.299, 0.587, 0.114));
+                        color = mix(vec3(luminance), color, 1.35);
+                        color = pow(color, vec3(0.92));
+
+                        float brightness1 = length(color);
+                        float mixFactor1 = max(brightness1 * 1.2, 0.15);
+                        color = mix(uDarkNavy, color, mixFactor1);
+
+                        float grainValue = grain(uv, uTime);
+                        color += grainValue * uGrainIntensity;
+                        color = clamp(color, vec3(0.0), vec3(1.0));
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            });
+
+            this.mesh = new THREE.Mesh(geometry, material);
+            this.mesh.position.z = 0;
+            this.sceneManager.scene.add(this.mesh);
+        }
+
+        update(delta) {
+            if (this.uniforms.uTime) {
+                this.uniforms.uTime.value += delta;
+            }
+        }
+
+        onResize(width, height) {
+            const viewSize = this.sceneManager.getViewSize();
+            if (this.mesh) {
+                this.mesh.geometry.dispose();
+                this.mesh.geometry = new THREE.PlaneGeometry(viewSize.width, viewSize.height, 1, 1);
+            }
+            if (this.uniforms.uResolution) {
+                this.uniforms.uResolution.value.set(width, height);
+            }
+        }
+    }
+
+    class App {
+        constructor() {
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", alpha: false, stencil: false, depth: false });
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            this.renderer.setAnimationLoop(null);
+            document.body.appendChild(this.renderer.domElement);
+            this.renderer.domElement.id = "webGLApp";
+
+            this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+            this.camera.position.z = 50;
+            this.scene = new THREE.Scene();
+            this.scene.background = new THREE.Color(0x0a0e27);
+            this.clock = new THREE.Clock();
+
+            this.touchTexture = new TouchTexture();
+            this.gradientBackground = new GradientBackground(this);
+            this.gradientBackground.uniforms.uTouchTexture.value = this.touchTexture.texture;
+
+            this.init();
+        }
+
+        init() {
+            this.gradientBackground.init();
+            this.render();
+            this.tick();
+
+            window.addEventListener("resize", () => this.onResize());
+            window.addEventListener("mousemove", (ev) => this.onMouseMove(ev));
+            window.addEventListener("touchmove", (ev) => this.onTouchMove(ev));
+        }
+
+        onTouchMove(ev) {
+            const touch = ev.touches[0];
+            this.onMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+        }
+
+        onMouseMove(ev) {
+            this.mouse = {
+                x: ev.clientX / window.innerWidth,
+                y: 1 - ev.clientY / window.innerHeight
+            };
+            this.touchTexture.addTouch(this.mouse);
+        }
+
+        getViewSize() {
+            const fovInRadians = (this.camera.fov * Math.PI) / 180;
+            const height = Math.abs(this.camera.position.z * Math.tan(fovInRadians / 2) * 2);
+            return { width: height * this.camera.aspect, height };
+        }
+
+        update(delta) {
+            this.touchTexture.update();
+            this.gradientBackground.update(delta);
+        }
+
+        render() {
+            const delta = this.clock.getDelta();
+            const clampedDelta = Math.min(delta, 0.1);
+            this.renderer.render(this.scene, this.camera);
+            this.update(clampedDelta);
+        }
+
+        tick() {
+            this.render();
+            requestAnimationFrame(() => this.tick());
+        }
+
+        onResize() {
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.gradientBackground.onResize(window.innerWidth, window.innerHeight);
+        }
+    }
+
+    const app = new App();
+
+    class MatrixGrid {
+        constructor(containerId) {
+            this.container = document.getElementById(containerId);
+            this.canvas = document.createElement('canvas');
+            this.ctx = this.canvas.getContext('2d');
+            this.cols = 15;
+            this.rows = 15;
+            this.grid = [];
+            this.mouse = { x: -1000, y: -1000 };
+
+            this.canvas.style.display = 'block';
+            this.canvas.style.width = '100%';
+            this.canvas.style.height = '100%';
+            this.container.appendChild(this.canvas);
+
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+            this.container.addEventListener('mousemove', (e) => this.onMouseMove(e));
+            this.container.addEventListener('mouseleave', () => this.onMouseLeave());
+            this.container.addEventListener('click', (e) => this.onClick(e));
+
+            this.initGrid();
+            this.animate();
+        }
+
+        resize() {
+            this.canvas.width = this.container.offsetWidth;
+            this.canvas.height = this.container.offsetHeight;
+            this.cellWidth = this.canvas.width / this.cols;
+            this.cellHeight = this.canvas.height / this.rows;
+        }
+
+        initGrid() {
+            this.grid = [];
+            for (let y = 0; y < this.rows; y++) {
+                this.grid[y] = [];
+                for (let x = 0; x < this.cols; x++) {
+                    this.grid[y][x] = { x: x, y: y, active: 0, maxActive: 0 };
+                }
+            }
+        }
+
+        onMouseMove(e) {
+            const rect = this.canvas.getBoundingClientRect();
+            const px = e.clientX - rect.left;
+            const py = e.clientY - rect.top;
+            this.mouse.x = Math.floor(px / this.cellWidth);
+            this.mouse.y = Math.floor(py / this.cellHeight);
+
+            if (this.mouse.x >= 0 && this.mouse.x < this.cols && this.mouse.y >= 0 && this.mouse.y < this.rows) {
+                this.activateCell(this.mouse.x, this.mouse.y, 50);
+            }
+        }
+
+        onMouseLeave() {
+            this.mouse.x = -1000;
+            this.mouse.y = -1000;
+        }
+
+        onClick(e) {
+            const rect = this.canvas.getBoundingClientRect();
+            const px = e.clientX - rect.left;
+            const py = e.clientY - rect.top;
+            const x = Math.floor(px / this.cellWidth);
+            const y = Math.floor(py / this.cellHeight);
+
+            if (x >= 0 && x < this.cols && y >= 0 && y < this.rows) {
+                this.activateCell(x, y, 100);
+            }
+        }
+
+        activateCell(x, y, strength) {
+            if (x >= 0 && x < this.cols && y >= 0 && y < this.rows) {
+                this.grid[y][x].active = Math.max(this.grid[y][x].active, strength);
+                this.grid[y][x].maxActive = strength;
+            }
+        }
+
+        propagate() {
+            const newGrid = JSON.parse(JSON.stringify(this.grid));
+
+            for (let y = 0; y < this.rows; y++) {
+                for (let x = 0; x < this.cols; x++) {
+                    if (this.grid[y][x].active > 0) {
+                        const neighbors = [
+                            [x-1, y], [x+1, y], [x, y-1], [x, y+1],
+                            [x-1, y-1], [x+1, y-1], [x-1, y+1], [x+1, y+1]
+                        ];
+
+                        neighbors.forEach(([nx, ny]) => {
+                            if (nx >= 0 && nx < this.cols && ny >= 0 && ny < this.rows) {
+                                const currentActive = this.grid[y][x].active;
+                                const propagated = currentActive * 0.7;
+                                if (propagated > newGrid[ny][nx].active) {
+                                    newGrid[ny][nx].active = propagated;
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+            for (let y = 0; y < this.rows; y++) {
+                for (let x = 0; x < this.cols; x++) {
+                    this.grid[y][x].active = newGrid[y][x].active * 0.92;
+                }
+            }
+        }
+
+        animate() {
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.01)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.propagate();
+
+            for (let y = 0; y < this.rows; y++) {
+                for (let x = 0; x < this.cols; x++) {
+                    const cell = this.grid[y][x];
+                    const px = x * this.cellWidth + this.cellWidth / 2;
+                    const py = y * this.cellHeight + this.cellHeight / 2;
+                    const intensity = Math.pow(cell.active / 100, 0.5);
+                    const radius = 2 + intensity * 4;
+
+                    this.ctx.fillStyle = `rgba(241, 90, 36, ${0.3 + intensity * 0.7})`;
+                    this.ctx.beginPath();
+                    this.ctx.arc(px, py, radius, 0, Math.PI * 2);
+                    this.ctx.fill();
+
+                    if (cell.active > 10) {
+                        this.ctx.strokeStyle = `rgba(241, 90, 36, ${intensity * 0.3})`;
+                        this.ctx.lineWidth = 1;
+                        this.ctx.beginPath();
+                        this.ctx.arc(px, py, radius + 3, 0, Math.PI * 2);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+
+            this.ctx.strokeStyle = 'rgba(241, 90, 36, 0.2)';
+            this.ctx.lineWidth = 1;
+
+            for (let y = 0; y < this.rows; y++) {
+                for (let x = 0; x < this.cols; x++) {
+                    if (this.grid[y][x].active > 20) {
+                        const px = x * this.cellWidth + this.cellWidth / 2;
+                        const py = y * this.cellHeight + this.cellHeight / 2;
+                        const neighbors = [[x+1, y], [x, y+1], [x+1, y+1]];
+
+                        neighbors.forEach(([nx, ny]) => {
+                            if (nx < this.cols && ny < this.rows) {
+                                const neighborActive = this.grid[ny][nx].active;
+                                if (neighborActive > 20) {
+                                    const npx = nx * this.cellWidth + this.cellWidth / 2;
+                                    const npy = ny * this.cellHeight + this.cellHeight / 2;
+                                    const avgActive = (this.grid[y][x].active + neighborActive) / 2;
+
+                                    this.ctx.globalAlpha = Math.min(avgActive / 100, 0.4);
+                                    this.ctx.beginPath();
+                                    this.ctx.moveTo(px, py);
+                                    this.ctx.lineTo(npx, npy);
+                                    this.ctx.stroke();
+                                    this.ctx.globalAlpha = 1;
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+            requestAnimationFrame(() => this.animate());
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            new MatrixGrid('matrixCanvas');
+        });
+    } else {
+        new MatrixGrid('matrixCanvas');
+    }
+
+    const cursor = document.getElementById("customCursor");
+    let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+
+    document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    let isCursorAnimating = false;
+
+    function animateCursor() {
+        if (!isCursorAnimating) return;
+        cursorX = mouseX;
+        cursorY = mouseY;
+        cursor.style.left = cursorX + "px";
+        cursor.style.top = cursorY + "px";
+        requestAnimationFrame(animateCursor);
+    }
+
+    document.addEventListener("mousemove", () => {
+        if (!isCursorAnimating) {
+            isCursorAnimating = true;
+            animateCursor();
+        }
+    }, { once: false });
+
+    const contactBtns = document.querySelectorAll(".contact-btn");
+    contactBtns.forEach((btn) => {
+        btn.addEventListener("mouseenter", () => {
+            cursor.style.width = "50px";
+            cursor.style.height = "50px";
+            cursor.style.borderWidth = "3px";
+        });
+
+        btn.addEventListener("mouseleave", () => {
+            cursor.style.width = "40px";
+            cursor.style.height = "40px";
+            cursor.style.borderWidth = "2px";
+        });
+    });
+    </script>
 </body>
 </html>
